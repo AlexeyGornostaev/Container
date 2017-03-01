@@ -94,5 +94,5 @@ Sequential* vectorDestructor(Sequential* vector)
 		
 	}
 	
-	return NULL;data_t* data = convert(vector->data);
+	return NULL;
 }
