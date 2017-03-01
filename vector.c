@@ -124,7 +124,7 @@ void vectorResize(Sequential* vector, int size)
 		if (size <= 0) 
 		{
 			perror("This size cannot be!\n");
-			return;
+			return 0;
 		}
 		
 		Data_t* data = convert(vector->data);
@@ -141,4 +141,44 @@ void vectorResize(Sequential* vector, int size)
 	
 	}
 	
+}
+
+
+void vectorInsert(Sequential* vector, Iterator index, void* content) 
+{
+	
+	if (vectorValidityCheck(vector))
+	{
+
+		Data_t* data = convert(vector->data);
+
+		vector->resize(vector, data->size + 1);
+		
+		for (Iterator i = data->array + data->size - 2; i >= index; i--) 
+			*((void**)(i + 1)) = *(void**)i;
+			
+		*(void**)index = content;
+	}
+
+}
+
+
+void vectorBegin(Sequential* vector, Iterator pointer) 
+{
+	if (vectorValidityCheck(vector))
+	{
+		Data_t* data = convert(vector->data);
+		pointer = (Iterator)(data->array);
+	}
+}
+
+
+void vectorEnd(Sequential* vector, Iterator pointer)
+{
+
+	if (vectorValidityCheck(vector)) 
+	{
+		Data_t* data = convert(vector->data);
+		pointer = (Iterator)(data->array + data->size - 1);
+	}
 }
