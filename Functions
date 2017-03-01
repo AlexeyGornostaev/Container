@@ -1,0 +1,19 @@
+Container's functions
+
+constructor()
+destructor()
+begin()
+end()
+
+size()
+max_size()
+empty()
+resize()
+
+front()
+back()
+
+insert()
+erase()
+clear()
+swap()
