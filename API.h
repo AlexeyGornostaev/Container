@@ -6,8 +6,7 @@ struct Sequential typedef Sequential;
 
 typedef struct Sequential {
 	
-	int size;
-	void** array;
+	void* data;
 	
 	void  (*destructor) (Sequential* container);
 	
