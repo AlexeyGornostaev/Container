@@ -41,26 +41,24 @@ struct list {
 	int size;
 }typedef list;
 
-list* listof(Sequential* this_list) return (list*)(this_list->data);
+list* converter(Sequential* this_list) return (list*)(this_list->data);
 
 // ========================== FUNCTIONS ==========================
 
-void destroy (Sequential*);
+void destroy(Sequential*);
 
-void begin (Sequential*, Iterator pointer);
-void end (Sequential*, Iterator pointer);
-void next (Sequential*, Iterator pointer);
-void prev (Sequential*, Iterator pointer);
+void begin(Sequential*, Iterator pointer);
+void end(Sequential*, Iterator pointer);
+void next(Sequential*, Iterator pointer);
+void prev(Sequential*, Iterator pointer);
 
-void set (Sequential*, Iterator pointer, void* content);
-void* get (Sequential*, Iterator pointer);
-void insert (Sequential*, Iterator index, void* content);
-void swap (Sequential*, Iterator index1, Iterator index2);
+void set(Sequential*, Iterator pointer, void* content);
+void* get(Sequential*, Iterator pointer);
+void insert(Sequential*, Iterator index, void* content);
+void swap(Sequential*, Iterator index1, Iterator index2);
 
-Iterator iterator_init (struct Sequential* container);
-void iterator_destroy (Iterator pointer);
-
-cell* getNth(Sequential *this_list, size_t index);
+Iterator iterator_init(struct Sequential* container);
+void iterator_destroy(Iterator pointer);
 
 // ========================== LIST_CREATE ==========================
 
@@ -96,4 +94,42 @@ Sequential* list_create(int size, void** initial_content) {
 	}
 
 	return this_list;
+}
+
+// ========================= ITERATOR_INIT ===========================
+
+Iterator iterator_init(struct Sequential* this_list) {
+	void* p = ((list*)(this_list))->front;
+	return p;
+}
+
+// ======================== ITERATOR_DESTROY =========================
+
+void iterator_destroy(Iterator p) {
+	if (p) free(p);
+}
+
+// ============================== BEGIN ==============================
+
+void begin(Sequential* this_list, Iterator p) {
+	p = (void*)(((list*)(this_list->data))->front);
+}
+
+// =============================== END ===============================
+
+void end(Sequential* this_list, Iterator p) {
+	cell* last = ((list*)(this_list->data))->back;
+	cell* tmp = (cell*)malloc(sizeof(cell));
+    if (tmp == NULL) exit(3);
+
+    tmp->next = NULL;
+    tmp->prev = last;
+
+	p = tmp;
+}
+
+// =============================== SET ===============================
+
+void set(Sequential* container, Iterator p, void* content) {
+	((cell*)p)->data = content;	
 }
