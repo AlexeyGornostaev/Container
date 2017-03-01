@@ -26,5 +26,5 @@ typedef struct Sequential {
 	
 } Sequential;
 
-Sequential* vector_create (int size);
-Sequential* list_create (int size);
+Sequential* vector_create (int size, void* content);
+Sequential* list_create (int size, void* content);
