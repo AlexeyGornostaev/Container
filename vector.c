@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct data_t
+typedef struct Data_t
 {
 	int size;
 	void* array;
 	
-} data_t;
+} Data_t;
 
-data_t* convert(void* data)
+Data_t* convert(void* data)
 {	
-	return (data_t*)data;	
+	return (Data_t*)data;	
 }
 
 
@@ -32,8 +32,8 @@ Sequential* vector_create(int size, void** content)
 
 	Sequential* vector = (Sequential*)calloc(1, sizeof(Sequential));
 	
-	vector->data = (void*)calloc(1, sizeof(data_t));
-	data_t* data = convert(vector->data);
+	vector->data = (void*)calloc(1, sizeof(Data_t));
+	Data_t* data = convert(vector->data);
 	
 	data->size = size;
 	data->array = (void**)calloc(size, sizeof(void*));
@@ -46,7 +46,9 @@ Sequential* vector_create(int size, void** content)
 	
 	vector->validity_check = (*vectorValidityCheck);
 	vector->desturctor = (*vectorDestructor);
-	
+	vector->resize = (*vectorResize);
+	vector->itetator_construct(*vectorIteratorConstruct);
+	vector->iterator_destruct(*vectorIteratorDestruct);
 	
 	
 	return vector;
@@ -62,7 +64,7 @@ int vectorValidityCheck(Sequential* vector)
 		return 0;
 	}
 	
-	data_t* data = convert(vector->data);
+	Data_t* data = convert(vector->data);
 	
 	if (data->size <= 0)
 	{
@@ -86,7 +88,7 @@ Sequential* vectorDestructor(Sequential* vector)
 	if (vectorValidityCheck(vector))
 	{
 		
-		data_t* data = convert(vector->data);
+		Data_t* data = convert(vector->data);
 		
 		free(data->array);
 		free(vector->vars);
@@ -95,4 +97,48 @@ Sequential* vectorDestructor(Sequential* vector)
 	}
 	
 	return NULL;
+}
+
+Iterator vectorIteratorConstruct(Sequential* vector) 
+{
+	if (!vectorValidityCheck(vector)) return NULL;
+	
+	Data_t* data = convert(vector->data);
+	
+	return (Iterator)(data->array);	  
+}
+
+
+Iterator vectorIteratorDestruct(Iterator pointer)
+{	
+	return NULL;
+}
+
+
+void vectorResize(Sequential* vector, int size)
+{
+
+	if (vectorValidityCheck(vector)) 
+	{
+
+		if (size <= 0) 
+		{
+			perror("This size cannot be!\n");
+			return;
+		}
+		
+		Data_t* data = convert(vector->data);
+		int prevSize = data->size;
+		
+		data->size = size;
+		void** newArray = (void**)calloc(size, sizeof(void*));
+		
+		for (int i = 0; (i < prevSize) && (i < size); i++) 
+			newArray[i] = data->array[i];
+			
+		free(data->array);
+		data->array = newArray;
+	
+	}
+	
 }
