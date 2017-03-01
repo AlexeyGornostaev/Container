@@ -133,3 +133,21 @@ void end(Sequential* this_list, Iterator p) {
 void set(Sequential* container, Iterator p, void* content) {
 	((cell*)p)->data = content;	
 }
+
+// ============================== NEXT ==============================
+
+void next(Sequential* container, Iterator p) {
+	if (((cell*)p)->next) p = ((cell*)p)->next;
+}
+
+// ============================== PREV ==============================
+
+void prev(Sequential* container, Iterator p) {
+	if (((cell*)p)->prev) p = ((cell*)p)->prev;
+}
+
+// ============================== GET ==============================
+
+void* get(Sequential* this_list, Iterator p) {
+	return ((cell*)p)->data;
+}
