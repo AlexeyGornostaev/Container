@@ -18,8 +18,8 @@ typedef struct Sequential {
 	void  (*resize) (Sequential* container, int size);
 	void  (*swap) (Sequential* container, Iterator index1, Iterator index2);
 
-	Iterator (*iterator_init) (struct Sequential* container);
-	void (*iterator_destroy) (Iterator pointer);
+	Iterator (*iterator_construct) (struct Sequential* container);
+	void (*iterator_destruct) (Iterator pointer);
 } Sequential;
 
 Sequential* vector_create (int size, void* content);
