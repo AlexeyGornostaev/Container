@@ -1,18 +1,15 @@
 #pragma once
 
 typedef void* Iterator;
+typedef struct Sequential Sequential;
 
-struct Sequential typedef Sequential;
-
-typedef struct Sequential {
-	
+typedef struct Sequential {	
 	void* data;
 	
 	void  (*destructor) (Sequential* container);
 	
 	void (*begin) (Sequential* container, Iterator pointer);
 	void (*end) (Sequential* container, Iterator pointer);
-
 	void (*next) (Sequential* container, Iterator pointer);
 	void (*prev) (Sequential* container, Iterator pointer);
 	
@@ -23,7 +20,6 @@ typedef struct Sequential {
 
 	Iterator (*iterator_init) (struct Sequential* container);
 	void (*iterator_destroy) (Iterator pointer);
-	
 } Sequential;
 
 Sequential* vector_create (int size, void* content);
