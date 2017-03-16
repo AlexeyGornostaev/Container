@@ -1,26 +1,36 @@
 #pragma once
 
-typedef void** Iterator;
+typedef struct Iterator Iterator;
 typedef struct Sequential Sequential;
 
+
+typedef struct Iterator {
+	
+	void** pointer;
+	
+	void (*begin) (Sequential* container, void** pointer);	
+	void (*end) (Sequential* container, void** pointer);
+	void (*prev) (Sequential* container, void** pointer);	
+	void (*next) (Sequential* container, void** pointer);	
+	
+} Iterator;
+
+
 typedef struct Sequential {
+	
 	void* data;
 
-	void  (*destruct) (Sequential* container);
+	Sequential*  (*destruct) (Sequential* container);
 
-	void (*begin) (Sequential* container, Iterator pointer);	// Iterator to beginning
-	void (*end) (Sequential* container, Iterator pointer);		// Iterator to end
-	void (*prev) (Sequential* container, Iterator pointer);		// Get iterator to previous element
-	void (*next) (Sequential* container, Iterator pointer);		// Get iterator to next element
-
-	void* (*get) (Sequential* container, Iterator pointer);
-	void  (*insert) (Sequential* container, Iterator index, void* content);
+	void* (*get) (Sequential* container, void** pointer);
+	void  (*insert) (Sequential* container, void** index, void* content);
 	void  (*resize) (Sequential* container, int size);
-	void  (*swap) (Sequential* container, Iterator index1, Iterator index2);
+	void  (*swap) (Sequential* container, void** index1, void** index2);
 
-	Iterator (*iterator_construct) (struct Sequential* container);
-	void (*iterator_destruct) (Iterator pointer);
+	Iterator* (*iterator_construct) (Sequential* container);
+	Iterator* (*iterator_destruct) (Iterator* iterator);
+	
 } Sequential;
 
-Sequential* vector_create (int size, void** content, size_t content_size);
-Sequential* list_create (int size, void** content, size_t content_size);
+Sequential* vector_create (int size, void** content, int content_size);
+Sequential* list_create (int size, void** content, int content_size);
