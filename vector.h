@@ -19,17 +19,17 @@ Data_t* convert(void* data)
 	
 Sequential* vectorDestruct (Sequential* vector);
 void vectorResize (Sequential* vector, int size);
-void vectorSwap (Sequential* vector, void** index1, void** index2);
-void vectorInsert (Sequential* vector, void** index, void* content);
-void* vectorGet (Sequential* vector, void** pointer);
+void vectorSwap (Sequential* vector, Iterator* iter1, Iterator* iter2);
+void vectorInsert (Sequential* vector, Iterator* iter, void* content);
+void* vectorGet (Sequential* vector, Iterator* iter);
 
 Iterator* vectorIteratorConstruct(Sequential* vector);
 Iterator* vectorIteratorDestruct(Iterator* iterator);
 
-void vectorBegin(Sequential* vector, void** pointer);
-void vectorEnd (Sequential* vector, void** pointer);
-void vectorNext (Sequential* vector, void** pointer);
-void vectorPrev (Sequential* vector, void** pointer);
+void vectorBegin(Sequential* vector, Iterator* iter);
+void vectorEnd (Sequential* vector,  Iterator* iter);
+void vectorNext (Sequential* vector, Iterator* iter);
+void vectorPrev (Sequential* vector, Iterator* iter);
 
 char vectorValidCheck(Sequential* vector);
 
@@ -125,7 +125,7 @@ Sequential* vectorDestruct(Sequential* vector)
 }
 
 
-void vectorResize(Sequential* vector, it size) 
+void vectorResize(Sequential* vector, int size) 
 {
 
 	if (vectorValidCheck(vector)) 
@@ -172,7 +172,6 @@ Iterator* vectorIteratorConstruct(Sequential* vector)
 	Iterator* iterator = (Iterator*)calloc(1, sizeof(Iterator));
 	
 	Data_t* data = convert(vector->data);
-	void** pointer = (void**)calloc(1, sizeof(void*));
 	
 	iterator->pointer = data->array;
 	
@@ -194,92 +193,97 @@ Iterator* vectorIteratorDestruct(Iterator* iterator)
 
 
 
-void vectorInsert(Sequential* vector, void** pointer, void* initData) 
+void vectorInsert(Sequential* vector, Iterator* iter, void* initData) 
 {
 	
 	if (!vectorValidCheck(vector)) return;
 
 	Data_t* data = convert(vector->data);
-	int len = pointer - (void**)(data->array);
+	int len = iter->pointer - data->array;
 	
 	vector->resize(vector, data->size + 1);
 	
-	pointer = (void**)(data->array) + len;
+	iter->pointer = data->array + len;
 	
 	int initIndex = len / sizeof(void*);
 	int i = 0;
 	for (i = data->size - 2; i >= initIndex; i--) 
+	{
 		data->array[i + 1] = data->array[i];
+	//	printf("%d\n", data->array[i]);
+	}
 	
 	data->array[i+1] = initData; 
+	
+//	printf("%d\n", data->array[i+1]);
 	
 }
 
 
-
-
-void* vectorGet (Sequential* vector, void** pointer) 
+void* vectorGet (Sequential* vector, Iterator* iter) 
 {
 
 	if (!vectorValidCheck(vector)) return NULL;
 	
 	Data_t* data = convert(vector->data);
 	
-	int len = pointer - (void**)(data->array);
+	int len = iter->pointer - data->array;
 	int initIndex = len / sizeof(void*);
 	
 	return data->array[initIndex];
 }
 
-void vectorBegin (Sequential* vector, void** pointer)
+
+
+void vectorBegin(Sequential* vector, Iterator* iter)
 {
 
 	if (!vectorValidCheck(vector)) return;
 
 	Data_t* data = convert(vector->data);
 	
-	*pointer = (void**)(data->array);
+	iter->pointer = data->array;
 
 }
 
 
 
-void vectorEnd (Sequential* vector, void** pointer)
+void vectorEnd(Sequential* vector, Iterator* iter)
+{
+	
+	if (!vectorValidCheck(vector)) return;
+
+	Data_t* data = convert(vector->data);
+	
+	iter->pointer = data->array + (data->size - 1)*sizeof(void*);
+	
+}
+
+
+
+void vectorNext (Sequential* vector, Iterator* iter) 
 {
 
 	if (!vectorValidCheck(vector)) return;
 
 	Data_t* data = convert(vector->data);
 	
-	*pointer = (void**)(data->array + data->size - 1);
+	if (iter->pointer < data->array + (data->size - 1)*sizeof(void*))
+		iter->pointer += sizeof(void*);
 
 }
 
 
 
-void vectorNext (Sequential* vector, void** pointer) 
+void vectorPrev(Sequential* vector, Iterator* iter) 
 {
 
 	if (!vectorValidCheck(vector)) return;
 
 	Data_t* data = convert(vector->data);
 	
-	if (*pointer < (void*)(data->array + data->size - 1))
-		*pointer += sizeof (void*);
-
-}
-
-
-
-void vectorPrev (Sequential* vector, void** pointer) 
-{
-
-	if (!vectorValidCheck(vector)) return;
-
-	Data_t* data = convert(vector->data);
-	
-	if (*pointer > (void*)(data->array)) 
-		*pointer -= sizeof (void*);
+	if (iter->pointer > data->array) 
+		iter->pointer -= sizeof(void*);
 
 }
 
