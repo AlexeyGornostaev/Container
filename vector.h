@@ -17,19 +17,20 @@ Data_t* convert(void* data)
 }
 
 	
-Sequential* vectorDestruct (Sequential* vector);
-void vectorResize (Sequential* vector, int size);
-void vectorSwap (Sequential* vector, Iterator* iter1, Iterator* iter2);
-void vectorInsert (Sequential* vector, Iterator* iter, void* content);
-void* vectorGet (Sequential* vector, Iterator* iter);
+Sequential* vectorDestruct(Sequential* vector);
+void vectorResize(Sequential* vector, int size);
+void vectorSwap(Sequential* vector, Iterator* iter1, Iterator* iter2);
+void vectorInsert(Sequential* vector, Iterator* iter, void* content);
+void* vectorGet(Sequential* vector, Iterator* iter);
+void vectorAssign(Sequential* vector, Iterator* iter, void* content);
 
 Iterator* vectorIteratorConstruct(Sequential* vector);
 Iterator* vectorIteratorDestruct(Iterator* iterator);
 
 void vectorBegin(Sequential* vector, Iterator* iter);
-void vectorEnd (Sequential* vector,  Iterator* iter);
-void vectorNext (Sequential* vector, Iterator* iter);
-void vectorPrev (Sequential* vector, Iterator* iter);
+void vectorEnd(Sequential* vector,  Iterator* iter);
+void vectorNext(Sequential* vector, Iterator* iter);
+void vectorPrev(Sequential* vector, Iterator* iter);
 
 char vectorValidCheck(Sequential* vector);
 char iteratorValidCheck(Sequential* vector, Iterator* iter);
@@ -70,6 +71,7 @@ Sequential* vector_construct(int size, void** content, int content_size)
 	vector->insert = (*vectorInsert);
 	vector->get = (*vectorGet);
 	vector->swap = (*vectorSwap);
+	vector->assign = (*vectorAssign);
 
 	vector->iterator_construct = (*vectorIteratorConstruct);
 	vector->iterator_destruct = (*vectorIteratorDestruct);
@@ -267,6 +269,22 @@ void vectorSwap(Sequential* vector, Iterator* iter1, Iterator* iter2)
 
 }
 
+
+
+void vectorAssign(Sequential* vector, Iterator* iter, void* content) 
+{
+
+	if (!vectorValidCheck(vector) || 
+		!iteratorValidCheck(vector, iter)) return;
+		
+	Data_t* data = convert(vector->data);
+	
+	int len = iter->pointer - data->array;
+	int index = len / sizeof(void*);
+	
+	data->array[index] = content;
+		
+}
 
 
 
