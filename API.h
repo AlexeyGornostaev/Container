@@ -19,7 +19,7 @@ typedef struct Sequential {
 	Iterator* (*iterator_construct) (Sequential* container);
 	Iterator* (*iterator_destruct) (Iterator* iterator);
 
-	void* (*at) (Sequential* container, Iterator* iter);
+	void* (*get) (Sequential* container, Iterator* iter);
 	void (*assign) (Sequential* container, Iterator* iter, void* content);
 	void (*insert) (Sequential* container, Iterator* iter, void* content);
 	void (*resize) (Sequential* container, int size);
