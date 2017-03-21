@@ -20,9 +20,10 @@ typedef struct Sequential {
 	Iterator* (*iterator_destruct) (Iterator* iterator);
 
 	void* (*at) (Sequential* container, Iterator* iter);
-	void  (*insert) (Sequential* container, Iterator* iter, void* content);
-	void  (*resize) (Sequential* container, int size);
-	void  (*swap) (Sequential* container, Iterator* iter1, Iterator* iter2);
+	void (*assign) (Sequential* container, Iterator* iter, void* content);
+	void (*insert) (Sequential* container, Iterator* iter, void* content);
+	void (*resize) (Sequential* container, int size);
+	void (*swap) (Sequential* container, Iterator* iter1, Iterator* iter2);
 } Sequential;
 
 Sequential* vector_construct (int size, void** content, int content_size);
