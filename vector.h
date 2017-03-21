@@ -32,11 +32,10 @@ void vectorNext (Sequential* vector, Iterator* iter);
 void vectorPrev (Sequential* vector, Iterator* iter);
 
 char vectorValidCheck(Sequential* vector);
+char iteratorValidCheck(Sequential* vector, Iterator* iter);
 
 
-
-
-Sequential* vector_create(int size, void** content, int content_size) 
+Sequential* vector_construct(int size, void** content, int content_size) 
 {
 	
 	if (size <= 0) 
@@ -70,6 +69,7 @@ Sequential* vector_create(int size, void** content, int content_size)
 	vector->resize = (*vectorResize);
 	vector->insert = (*vectorInsert);
 	vector->get = (*vectorGet);
+	vector->swap = (*vectorSwap);
 
 	vector->iterator_construct = (*vectorIteratorConstruct);
 	vector->iterator_destruct = (*vectorIteratorDestruct);
@@ -192,6 +192,20 @@ Iterator* vectorIteratorDestruct(Iterator* iterator)
 }
 
 
+char iteratorValidCheck(Sequential* vector, Iterator* iter)
+{
+
+	Data_t* data = convert(vector->data);
+	
+	if (iter->pointer >= (data->array) && 
+		iter->pointer < (data->array + sizeof(void*) * data->size))
+		return 1;
+	else
+		return 0;
+		
+}
+
+
 
 void vectorInsert(Sequential* vector, Iterator* iter, void* initData) 
 {
@@ -210,12 +224,10 @@ void vectorInsert(Sequential* vector, Iterator* iter, void* initData)
 	for (i = data->size - 2; i >= initIndex; i--) 
 	{
 		data->array[i + 1] = data->array[i];
-	//	printf("%d\n", data->array[i]);
 	}
 	
 	data->array[i+1] = initData; 
 	
-//	printf("%d\n", data->array[i+1]);
 	
 }
 
@@ -230,8 +242,31 @@ void* vectorGet (Sequential* vector, Iterator* iter)
 	int len = iter->pointer - data->array;
 	int initIndex = len / sizeof(void*);
 	
-	return data->array[initIndex];
+	if (initIndex < data->size)
+		return data->array[initIndex];
+	else printf("No element hear!");
 }
+
+
+void vectorSwap(Sequential* vector, Iterator* iter1, Iterator* iter2)
+{
+	if (!vectorValidCheck(vector) || 
+		!iteratorValidCheck(vector, iter1) || 
+		!iteratorValidCheck(vector, iter2)) return;
+	
+	Data_t* data = convert(vector->data);
+	
+	int len1 = iter1->pointer - data->array;
+	int len2 = iter2->pointer - data->array;
+	int index1 = len1 / sizeof(void*);
+	int index2 = len2 / sizeof(void*);
+	
+	void* temp = data->array[index1];
+	data->array[index1] = data->array[index2];
+	data->array[index2] = temp;
+
+}
+
 
 
 
@@ -255,7 +290,7 @@ void vectorEnd(Sequential* vector, Iterator* iter)
 
 	Data_t* data = convert(vector->data);
 	
-	iter->pointer = data->array + (data->size - 1)*sizeof(void*);
+	iter->pointer = data->array + (data->size)*sizeof(void*);
 	
 }
 
@@ -268,7 +303,7 @@ void vectorNext (Sequential* vector, Iterator* iter)
 
 	Data_t* data = convert(vector->data);
 	
-	if (iter->pointer < data->array + (data->size - 1)*sizeof(void*))
+	if (iter->pointer <= data->array + (data->size - 1)*sizeof(void*))
 		iter->pointer += sizeof(void*);
 
 }
