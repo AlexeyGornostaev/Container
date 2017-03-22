@@ -116,7 +116,7 @@ Sequential* list_construct(int size, void** content, int content_size) {
 	int i = 0;
 	if (size >= 1) {
 		// присваиваем первому элементу
-		container_list->assign(container_list, (Iterator*)(((Cell_t***)&(&(mylist->head)))), content[i]); //мб **** и &&&
+		container_list->assign(container_list, (Iterator*)(((Cell_t**)&(mylist->head))), content[i]); //мб **** и &&& !!! changed
 	}
 	Iterator* iter = list_iterator_construct(container_list);
 	for (i = 1; i < size; i++) {
@@ -226,7 +226,8 @@ void list_assign(Sequential* container_list, Iterator* iter, void* content) {
 
 // ============================================================================
 void list_end(Sequential* container_list, Iterator* iter) {
-	iter->pointer = *((convert(container_list->data))->tail);
+	List_t* data = convert(container_list->data);
+	(Cell_t**)(iter->pointer) = &(data->tail); //!!! changed * to &
 	return;
 }
 
