@@ -14,14 +14,14 @@
 // DEFINES
 // ============================================================================
 
-#define ISNULL(p, s, v)                         \
-	if (p == NULL) {                        	\
+#define ISNULL(p, s, v)                        			\
+	if (p == NULL) {                        		\
 		printf("'%s' is invalid !\n", s);		\
 		return v;                        		\
 	}
 
-#define ZEROSIZE(p)                         	\
-	if (p <= 0) {                           	\
+#define ZEROSIZE(p)                         			\
+	if (p <= 0) {                           		\
 		printf("List size is invalid !\n");		\
 		return 0;                        		\
 	}
@@ -54,25 +54,25 @@ List_t* convert(void* data) {
 // ============================================================================
 
 Sequential* list_construct(int size, void** content, int content_size);			// Construct list
-Sequential* list_destruct(Sequential* list);									// Destruct list
+Sequential* list_destruct(Sequential* list);						// Destruct list
 
-Iterator* list_iterator_construct(Sequential* list);							// Construct iterator
-Iterator* list_iterator_destruct(Iterator* iter);								// Destuct iterator
+Iterator* list_iterator_construct(Sequential* list);					// Construct iterator
+Iterator* list_iterator_destruct(Iterator* iter);					// Destuct iterator
 
 void list_begin(Sequential* container_list, Iterator* pointer);				// Return iterator to beginning
-void list_end(Sequential* container_list, Iterator* pointer);					// Return iterator to end
+void list_end(Sequential* container_list, Iterator* pointer);				// Return iterator to end
 void list_next(Sequential* container_list, Iterator* pointer);				// Return iterator to next list element
 void list_prev(Sequential* container_list, Iterator* pointer);				// Return iterator to previous list element
 
-void* list_get(Sequential* container_list, Iterator* iter);					// Get value by iterator
-void list_assign(Sequential* container_list, Iterator* iter, void* content);	// Assign content [to container] [by iterator]
-void list_insert(Sequential* container_list, Iterator* iter, void* content);	// Insert elements
-//void list_resize(Sequential* container_list, int size);						// Change size
-void list_swap (Sequential* container_list, Iterator* iter1, Iterator* iter2);// Swap content
+void* list_get(Sequential* container_list, Iterator* iter);				// Get value by iterator
+void list_assign(Sequential* container_list, Iterator* iter, void* content);		// Assign content [to container] [by iterator]
+void list_insert(Sequential* container_list, Iterator* iter, void* content);		// Insert elements
+//void list_resize(Sequential* container_list, int size);				// Change size
+void list_swap (Sequential* container_list, Iterator* iter1, Iterator* iter2);		// Swap content
 
-int list_valid_check(Sequential* container_list);
+int list_valid_check(Sequential* container_list);					// Check errors
 
-void list_view(Sequential* container_list);										// View list
+void list_view(Sequential* container_list);						// View list
 
 // ============================================================================
 
@@ -147,7 +147,6 @@ Sequential* list_destruct(Sequential* container_list) {
 }
 
 // ============================================================================
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Iterator* list_iterator_construct(Sequential* container_list) {
 
 	if (!list_valid_check(container_list)) return NULL;
@@ -197,8 +196,7 @@ Iterator list_iterator_init(struct Sequential* container_list) {
 	*pointer = l->head;	//
 
 	return pointer;
-}
-*/
+}*/
 
 // ============================================================================
 Iterator* list_iterator_destruct(Iterator* iter) {
@@ -213,6 +211,7 @@ void list_assign(Sequential* container_list, Iterator* iter, void* content) {
 	((Cell_t*)(*(iter->pointer)))->data = content;
 	//if (!vectorValidCheck(vector) ||
 	//	!iteratorValidCheck(vector, iter)) return;
+}
 /*
 	List_t* data = convert(container_list->data); // void* -> Data_t*!!!!!
 
@@ -222,7 +221,6 @@ void list_assign(Sequential* container_list, Iterator* iter, void* content) {
 	data->array[index] = content;
 	data->array = void**
 */
-}
 
 // ============================================================================
 void list_end(Sequential* container_list, Iterator* iter) {
@@ -238,28 +236,28 @@ void list_insert(Sequential* container_list, Iterator* iter, void* content) {
 	// if (iter == NULL) return;
 
 	List_t* data = convert(container_list->data);
-    Cell_t* temp_cell = NULL;
+	Cell_t* temp_cell = NULL;
 	Cell_t* insertion = (Cell_t*)calloc(1, sizeof(Cell_t));
-    temp_cell = *(iter->pointer);
+	temp_cell = *(iter->pointer);
 
-    insertion->data = content;
-    insertion->prev = temp_cell;
-    insertion->next = temp_cell->next;
+	insertion->data = content;
+	insertion->prev = temp_cell;
+	insertion->next = temp_cell->next;
 
-    if (temp_cell->next) {
-        temp_cell->next->prev = insertion;
-    }
-    temp_cell->next = insertion;
+	if (temp_cell->next) {
+		temp_cell->next->prev = insertion;
+	}
+	temp_cell->next = insertion;
 
-    if (!insertion->prev) {
-        data->head = insertion;
-    }
+	if (!insertion->prev) {
+		data->head = insertion;
+	}
 
-    if (!insertion->next) {
-        data->tail = insertion;
-    }
+	if (!insertion->next) {
+		data->tail = insertion;
+	}
 
-    data->size++;
+	data->size++;
 }
 
 // ============================================================================
@@ -342,7 +340,7 @@ void* list_get(Sequential* container_list, Iterator* iter) {
 void list_swap(Sequential* container_list, Iterator* iter1, Iterator* iter2) {
 
 	Cell_t* elememt1;
-    Cell_t* elememt2;
+    	Cell_t* elememt2;
 	void* temp = NULL;
 
 		//printf("swap0\n");
