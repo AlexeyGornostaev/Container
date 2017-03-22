@@ -14,15 +14,15 @@
 // DEFINES
 // ============================================================================
 
-#define ISNULL(p, s)                           	\
+#define ISNULL(p, s)                           		\
 	if (p == NULL) {                        	\
-		perror("'%s' is invalid !\n", s);		\
+		perror("'%s' is invalid !\n", s);	\
 		return NULL;                        	\
 	}
 
-#define ZEROSIZE(p)                         	\
+#define ZEROSIZE(p)                         		\
 	if (p <= 0) {                           	\
-		perror("List size is invalid !\n");		\
+		perror("List size is invalid !\n");	\
 		return NULL;                        	\
 	}
 
@@ -54,25 +54,25 @@ List_t* convert(void* data) {
 // ============================================================================
 
 Sequential* list_construct(int size, void** content, int content_size);			// Construct list
-Sequential* list_destruct(Sequential* list);									// Destruct list
+Sequential* list_destruct(Sequential* list);						// Destruct list
 
-Iterator* list_iterator_construct(Sequential* list);							// Construct iterator
-Iterator* list_iterator_destruct(Iterator* iter);								// Destuct iterator
+Iterator* list_iterator_construct(Sequential* list);					// Construct iterator
+Iterator* list_iterator_destruct(Iterator* iter);					// Destuct iterator
 
-//void list_begin(Sequential*, Iterator pointer);									// Return iterator to beginning
-void list_end(Sequential*, Iterator pointer);									// Return iterator to end
-//void list_next(Sequential*, Iterator pointer);									// Return iterator to next list element
-//void list_prev(Sequential*, Iterator pointer);									// Return iterator to previous list element
+//void list_begin(Sequential*, Iterator pointer);					// Return iterator to beginning
+void list_end(Sequential*, Iterator pointer);						// Return iterator to end
+//void list_next(Sequential*, Iterator pointer);					// Return iterator to next list element
+//void list_prev(Sequential*, Iterator pointer);					// Return iterator to previous list element
 
-//void* list_get(Sequential* container_list, Iterator* iter);						// Get value by iterator
-void list_assign(Sequential* container_list, Iterator* iter, void* content);	// Assign content [to container] [by iterator]
-void list_insert(Sequential* container_list, Iterator* iter, void* content);	// Insert elements
-//void list_resize(Sequential* container_list, int size);							// Change size
+//void* list_get(Sequential* container_list, Iterator* iter);				// Get value by iterator
+void list_assign(Sequential* container_list, Iterator* iter, void* content);		// Assign content [to container] [by iterator]
+void list_insert(Sequential* container_list, Iterator* iter, void* content);		// Insert elements
+//void list_resize(Sequential* container_list, int size);				// Change size
 //void list_swap (Sequential* container_list, Iterator* iter1, Iterator* iter2);	// Swap content
 
-int list_valid_check(Sequential* container_list);
+int list_valid_check(Sequential* container_list);					// Check errors
 
-//void list_view(Sequential* container_list);										// View list
+//void list_view(Sequential* container_list);						// View list
 
 // ============================================================================
 
