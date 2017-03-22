@@ -59,20 +59,20 @@ Sequential* list_destruct(Sequential* list);									// Destruct list
 Iterator* list_iterator_construct(Sequential* list);							// Construct iterator
 Iterator* list_iterator_destruct(Iterator* iter);								// Destuct iterator
 
-//void list_begin(Sequential* container_list, Iterator* pointer);				// Return iterator to beginning
+void list_begin(Sequential* container_list, Iterator* pointer);				// Return iterator to beginning
 void list_end(Sequential* container_list, Iterator* pointer);					// Return iterator to end
-//void list_next(Sequential* container_list, Iterator* pointer);				// Return iterator to next list element
-//void list_prev(Sequential* container_list, Iterator* pointer);				// Return iterator to previous list element
+void list_next(Sequential* container_list, Iterator* pointer);				// Return iterator to next list element
+void list_prev(Sequential* container_list, Iterator* pointer);				// Return iterator to previous list element
 
-//void* list_get(Sequential* container_list, Iterator* iter);					// Get value by iterator
+void* list_get(Sequential* container_list, Iterator* iter);					// Get value by iterator
 void list_assign(Sequential* container_list, Iterator* iter, void* content);	// Assign content [to container] [by iterator]
 void list_insert(Sequential* container_list, Iterator* iter, void* content);	// Insert elements
 //void list_resize(Sequential* container_list, int size);						// Change size
-//void list_swap (Sequential* container_list, Iterator* iter1, Iterator* iter2);// Swap content
+void list_swap (Sequential* container_list, Iterator* iter1, Iterator* iter2);// Swap content
 
 int list_valid_check(Sequential* container_list);
 
-//void list_view(Sequential* container_list);										// View list
+void list_view(Sequential* container_list);										// View list
 
 // ============================================================================
 
@@ -90,11 +90,11 @@ Sequential* list_construct(int size, void** content, int content_size) {
 	List_t* data = convert(container_list->data);
 
 	// designate functions
-//	container_list->get = (*list_get);
+	container_list->get = (*list_get);
 	container_list->assign = (*list_assign);
 	container_list->insert = (*list_insert);
 //	container_list->resize = (*list_resize);
-//	container_list->swap = (*list_swap);
+	container_list->swap = (*list_swap);
 
 	// designate list destructor
 	container_list->destruct = (*list_destruct);
@@ -163,10 +163,10 @@ Iterator* list_iterator_construct(Sequential* container_list) {
 
 	//return pointer;
 
-//	iterator->begin = (*list_begin);
+	iterator->begin = (*list_begin);
 	iterator->end = (*list_end);
-//	iterator->prev = (*list_prev);
-//	iterator->next = (*list_next);
+	iterator->prev = (*list_prev);
+	iterator->next = (*list_next);
 
 	return iterator;
 }
@@ -227,7 +227,7 @@ void list_assign(Sequential* container_list, Iterator* iter, void* content) {
 // ============================================================================
 void list_end(Sequential* container_list, Iterator* iter) {
 	List_t* data = convert(container_list->data);
-	(Cell_t**)(iter->pointer) = &(data->tail); //!!! changed * to &
+	((Cell_t*)(*(iter->pointer))) = data->tail; //!!! changed * to &
 	return;
 }
 
@@ -276,4 +276,103 @@ int list_valid_check(Sequential* container_list) {
 	}*/
 
 	return 1;
+}
+
+// ============================================================================
+void list_begin(Sequential* container_list, Iterator* iter) {
+
+	if (!list_valid_check(container_list)) return;
+	List_t* data = convert(container_list->data);
+	iter = data->head;
+}
+
+// ============================================================================
+void list_prev(Sequential* container_list, Iterator* iter) {
+
+	if (!list_valid_check(container_list)) return;
+
+	List_t* data = convert(container_list->data);
+
+	//if (iter->pointer > data->array)
+	//	iter->pointer -= sizeof(void*);
+
+	if ((((Cell_t*)(iter))->prev) != data->head) {
+		iter = ((Cell_t*)(iter))->prev;
+	} else {
+		iter = NULL;
+	}
+}
+
+// ============================================================================
+void vectorNext(Sequential* container_list, Iterator* iter) {
+
+	if (!list_valid_check(container_list)) return;
+
+	List_t* data = convert(container_list->data);
+
+	//if (iter->pointer <= data->array + (data->size - 1)*sizeof(void*))
+	//	iter->pointer += sizeof(void*);
+
+	if ((((Cell_t*)(iter))->next) != data->tail) {
+		iter = ((Cell_t*)(iter))->next;
+	} else {
+		iter = NULL;
+	}
+}
+
+// ============================================================================
+void* list_get(Sequential* container_list, Iterator* iter) {
+
+	if (!list_valid_check(container_list)) return NULL;
+
+	return ((Cell_t*)(iter))->data;
+	/*
+	List_t* data = convert(container_list->data);
+
+	int len = iter->pointer - data->array;
+	int initIndex = len / sizeof(void*);
+
+	if (initIndex < data->size)
+		return data->array[initIndex];
+	else printf("No element hear!");
+	*/
+}
+
+// ============================================================================
+void list_swap(Sequential* container_list, Iterator* iter1, Iterator* iter2) {
+
+	Cell_t* elememt1;
+    Cell_t* elememt2;
+	void* temp = NULL;
+
+		//printf("swap0\n");
+	elememt1 = iter1;
+	elememt2 = iter2;
+
+		//printf("swap1 tmp - %p elm1 - %p elm2 - %p data1 - %p data2 - %p\n", tmp, elm1, elm2, elm1->data, elm2->data);
+	temp = elememt1->data;
+	elememt1->data = elememt2->data;
+	elememt2->data = temp;
+}
+
+// ============================================================================
+void list_show(Sequential* container_list){
+
+	List_t* data = convert(container_list);
+
+	Cell_t* element = data->head;
+
+	printf("////////////////////////////\n");
+	while (element != data->tail) {
+		printf("\nelm - %p\nelm->prev - %p\nelm->next - %p\nelm->data - %p\n\n",
+			element, element->prev, element->next, (char*)(element->data));
+		element = element->next;
+	}
+
+	printf("\nelm - %p\nelm->prev - %p\nelm->next - %p\nelm->data - %p\n",
+		element, element->prev, element->next, (char*)(element->data));
+
+	printf("\nsize - %d\n", data->size);
+	printf("/\\\\\\\\\\\\\\\\\\\\\\\\\\/\n");
+
 }
